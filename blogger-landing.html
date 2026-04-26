@@ -1,0 +1,1110 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>eatuition — AI-компаньон по интуитивному питанию</title>
+  <meta
+    name="description"
+    content="eatuition помогает ученицам применять интуитивное питание каждый день: дневник, ИИ-помощник, сводка дня и PDF-экспорт."
+  />
+  <style>
+    :root {
+      --bg: #fbf9ff;
+      --surface: #ffffff;
+      --surface-soft: #f4efff;
+      --primary: #6c3df4;
+      --primary-dark: #4931a8;
+      --text: #272238;
+      --muted: #6f6784;
+      --border: #e8def8;
+      --green: #2f9b68;
+      --orange: #d98732;
+      --shadow: 0 22px 70px rgba(73, 49, 168, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 0%, rgba(108, 61, 244, 0.12), transparent 28rem),
+        radial-gradient(circle at 90% 12%, rgba(237, 167, 215, 0.2), transparent 26rem),
+        linear-gradient(180deg, #ffffff 0%, var(--bg) 45%, #ffffff 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 28px 0;
+    }
+
+    .brand {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .nav-pill {
+      padding: 11px 16px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--primary-dark);
+      background: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+      gap: 54px;
+      align-items: center;
+      padding: 56px 0 82px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      padding: 9px 13px;
+      border-radius: 999px;
+      background: var(--surface-soft);
+      color: var(--primary-dark);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(44px, 7vw, 76px);
+      line-height: 0.95;
+      letter-spacing: -0.075em;
+    }
+
+    .lead {
+      max-width: 640px;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: 21px;
+      line-height: 1.55;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 32px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 0 22px;
+      border-radius: 999px;
+      font-weight: 800;
+      border: 1px solid transparent;
+    }
+
+    .button.primary {
+      color: #ffffff;
+      background: linear-gradient(135deg, #6c3df4 0%, #56b7f4 52%, #e79ad0 100%);
+      box-shadow: 0 18px 42px rgba(108, 61, 244, 0.24);
+    }
+
+    .button.secondary {
+      color: var(--primary-dark);
+      background: #ffffff;
+      border-color: var(--border);
+    }
+
+    .hero-card {
+      padding: 18px;
+      border-radius: 34px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(232, 222, 248, 0.9);
+      box-shadow: var(--shadow);
+    }
+
+    .video-box,
+    .media-placeholder {
+      overflow: hidden;
+      border-radius: 26px;
+      background: linear-gradient(145deg, #f2edff, #ffffff);
+      border: 1px solid var(--border);
+    }
+
+    video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      object-fit: cover;
+      background: var(--surface-soft);
+    }
+
+    .video-fallback {
+      min-height: 520px;
+      display: grid;
+      place-items: center;
+      padding: 34px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    section {
+      padding: 76px 0;
+    }
+
+    .section-head {
+      max-width: 760px;
+      margin-bottom: 32px;
+    }
+
+    .kicker {
+      margin: 0 0 10px;
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(32px, 4.5vw, 48px);
+      line-height: 1.05;
+      letter-spacing: -0.055em;
+    }
+
+    .section-copy {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      padding: 26px;
+      border-radius: 28px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: 0 14px 45px rgba(39, 34, 56, 0.06);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      letter-spacing: -0.03em;
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    .card p {
+      margin: 0;
+    }
+
+    .card ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      counter-reset: flow;
+    }
+
+    .flow-step {
+      position: relative;
+      padding: 24px;
+      border-radius: 26px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+
+    .flow-step::before {
+      counter-increment: flow;
+      content: counter(flow);
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 18px;
+      border-radius: 999px;
+      color: #ffffff;
+      background: var(--primary);
+      font-weight: 900;
+    }
+
+    .flow-step strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .flow-step span {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .screens {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+      align-items: start;
+    }
+
+    .screen {
+      padding: 10px;
+      border-radius: 28px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 50px rgba(73, 49, 168, 0.1);
+    }
+
+    .screen img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      object-fit: cover;
+      border-radius: 20px;
+      background: var(--surface-soft);
+    }
+
+    .screen-caption {
+      padding: 12px 8px 4px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    .pros {
+      border-color: rgba(47, 155, 104, 0.28);
+      background: linear-gradient(180deg, rgba(47, 155, 104, 0.07), #ffffff);
+    }
+
+    .risks {
+      border-color: rgba(217, 135, 50, 0.24);
+      background: linear-gradient(180deg, rgba(217, 135, 50, 0.07), #ffffff);
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .metric {
+      padding: 22px;
+      border-radius: 24px;
+      background: var(--surface-soft);
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--primary-dark);
+      font-size: 28px;
+      letter-spacing: -0.04em;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .calc-list,
+    .argument-list,
+    .roadmap-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .calc-line,
+    .argument-line,
+    .roadmap-line {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 18px;
+      padding: 18px;
+      border-radius: 22px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+    }
+
+    .calc-line strong,
+    .argument-line strong,
+    .roadmap-line strong {
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .calc-line span,
+    .argument-line span,
+    .roadmap-line span {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .scenario {
+      padding: 22px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #ffffff, var(--surface-soft));
+      border: 1px solid var(--border);
+    }
+
+    .scenario strong {
+      display: block;
+      color: var(--primary-dark);
+      font-size: 24px;
+      letter-spacing: -0.04em;
+    }
+
+    .scenario span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .calculator {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-top: 22px;
+    }
+
+    .calculator-panel {
+      padding: 26px;
+      border-radius: 28px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      box-shadow: 0 14px 45px rgba(39, 34, 56, 0.06);
+    }
+
+    .range-field + .range-field {
+      margin-top: 20px;
+    }
+
+    .range-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      color: var(--text);
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .range-label span {
+      color: var(--primary-dark);
+      white-space: nowrap;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      margin: 12px 0 0;
+      accent-color: var(--primary);
+    }
+
+    .calculator-result {
+      display: grid;
+      gap: 14px;
+    }
+
+    .result-card {
+      padding: 20px;
+      border-radius: 24px;
+      background: var(--surface-soft);
+    }
+
+    .result-card strong {
+      display: block;
+      color: var(--primary-dark);
+      font-size: 30px;
+      letter-spacing: -0.05em;
+    }
+
+    .result-card span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .pilot {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .pilot-highlight {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 34px;
+      border-radius: 32px;
+      color: #ffffff;
+      background: linear-gradient(135deg, #6c3df4 0%, #4931a8 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .pilot-highlight strong {
+      font-size: 50px;
+      line-height: 1;
+      letter-spacing: -0.06em;
+    }
+
+    .pilot-highlight span {
+      margin-top: 14px;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 18px;
+      line-height: 1.45;
+    }
+
+    .cta {
+      padding: 54px;
+      border-radius: 36px;
+      text-align: center;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.28), transparent 20rem),
+        linear-gradient(135deg, #6c3df4 0%, #56b7f4 52%, #e79ad0 100%);
+      color: #ffffff;
+      box-shadow: var(--shadow);
+    }
+
+    .cta h2 {
+      color: #ffffff;
+    }
+
+    .cta p {
+      max-width: 720px;
+      margin: 16px auto 28px;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 18px;
+      line-height: 1.55;
+    }
+
+    .cta .button {
+      background: #ffffff;
+      color: var(--primary-dark);
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    footer {
+      padding: 34px 0 54px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .split,
+      .pilot {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-3,
+      .flow,
+      .screens,
+      .metric-row,
+      .scenario-grid,
+      .calculator {
+        grid-template-columns: 1fr;
+      }
+
+      .calc-line,
+      .argument-line,
+      .roadmap-line {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 24px;
+      }
+
+      .video-fallback {
+        min-height: 420px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav class="nav" aria-label="Навигация">
+      <div class="brand">eatuition</div>
+      <a class="nav-pill" href="#pilot">Обсудить пилот</a>
+    </nav>
+
+    <header class="hero">
+      <div>
+        <div class="eyebrow">Персональное предложение для школы интуитивного питания</div>
+        <h1>Ваш курс может стать первым приложением нового формата</h1>
+        <p class="lead">
+          eatuition превращает вашу методологию в ежедневный цифровой продукт:
+          дневник, ИИ-помощник, упражнения, статьи, сводка дня и PDF-отчёт
+          для ученицы или специалиста.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#demo">Посмотреть демо</a>
+          <a class="button secondary" href="#economy">Экономика проекта</a>
+        </div>
+      </div>
+
+      <div class="hero-card" id="demo">
+        <div class="video-box">
+          <video controls poster="assets/landing/cover-main.jpg">
+            <source src="assets/landing/demo-video.mp4" type="video/mp4" />
+          </video>
+        </div>
+      </div>
+    </header>
+
+    <section id="problem">
+      <div class="section-head">
+        <p class="kicker">Почему это может быть ценно именно вам</p>
+        <h2>Курс заканчивается. Ежедневная борьба ученицы — нет.</h2>
+        <p class="section-copy">
+          У вашей аудитории уже есть доверие к вам и интерес к теме. Приложение
+          может стать не “ещё одним продуктом”, а продолжением вашего подхода
+          в моменте, когда ученица остаётся одна: вечером, на работе, перед ПМС
+          или после срыва.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <article class="card">
+          <h3>Сладкое после работы</h3>
+          <p>Усталость, сериал и привычный вечерний ритуал легко превращаются в автоматическое переедание.</p>
+        </article>
+        <article class="card">
+          <h3>ПМС и тяга</h3>
+          <p>Тело просит больше энергии, а человек часто считывает это как “со мной что-то не так”.</p>
+        </article>
+        <article class="card">
+          <h3>Вина после “срыва”</h3>
+          <p>Один эпизод запускает самокритику, из-за которой сложнее вернуться к обычному ритму.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="solution">
+      <div class="section-head">
+        <p class="kicker">Решение</p>
+        <h2>Не замена эксперта, а усиление вашего личного бренда</h2>
+        <p class="section-copy">
+          На русскоязычном рынке почти нет готового приложения, которое объединяет
+          интуитивное питание, ИИ-поддержку, дневник ощущений, упражнения и отчёты.
+          В англоязычных продуктах чаще есть либо подсчёт калорий, либо общий ИИ-чат,
+          но не продукт под школу, методологию автора и мягкую практику без диет.
+        </p>
+      </div>
+
+      <div class="flow">
+        <div class="flow-step">
+          <strong>Дневник</strong>
+          <span>Запись еды, голода, сытости, эмоций и контекста.</span>
+        </div>
+        <div class="flow-step">
+          <strong>ИИ-помощник</strong>
+          <span>Поддержка в моменте и связь текущего запроса с прошлым контекстом.</span>
+        </div>
+        <div class="flow-step">
+          <strong>Сводка дня</strong>
+          <span>Паттерны: время, эмоции, тяга, экран, усталость.</span>
+        </div>
+        <div class="flow-step">
+          <strong>PDF-экспорт</strong>
+          <span>Готовый дневник для психолога, нутрициолога или куратора.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="screenshots">
+      <div class="section-head">
+        <p class="kicker">Демо-доказательства</p>
+        <h2>Продукт уже выглядит как готовая витрина</h2>
+        <p class="section-copy">
+          Главный экран, курс, статьи, упражнения, ИИ-помощник, paywall и PDF:
+          так блогер сразу видит не идею, а продуктовую систему.
+        </p>
+      </div>
+
+      <div class="screens">
+        <figure class="screen">
+          <img src="assets/landing/cover-main.jpg" alt="Главный экран eatuition" />
+          <figcaption class="screen-caption">Главный экран и план дня</figcaption>
+        </figure>
+        <figure class="screen">
+          <img src="assets/landing/screen-home.jpg" alt="Сводка дня и ИИ-советы eatuition" />
+          <figcaption class="screen-caption">Сводка дня и ИИ-советы</figcaption>
+        </figure>
+        <figure class="screen">
+          <img src="assets/landing/screen-course.jpg" alt="Экран курса eatuition" />
+          <figcaption class="screen-caption">Курс внутри приложения</figcaption>
+        </figure>
+        <figure class="screen">
+          <img src="assets/landing/screen-articles.jpg" alt="Статьи по интуитивному питанию" />
+          <figcaption class="screen-caption">Статьи и образовательный контент</figcaption>
+        </figure>
+        <figure class="screen">
+          <img src="assets/landing/screen-training.jpg" alt="Упражнения eatuition" />
+          <figcaption class="screen-caption">Практические упражнения</figcaption>
+        </figure>
+        <figure class="screen">
+          <img src="assets/landing/screen-chat.jpg" alt="Чат с ИИ-помощником" />
+          <figcaption class="screen-caption">ИИ-помощник с памятью контекста</figcaption>
+        </figure>
+        <figure class="screen">
+          <img src="assets/landing/screen-chat2.jpg" alt="Пример ответа ИИ-помощника" />
+          <figcaption class="screen-caption">Поддержка после сложного эпизода</figcaption>
+        </figure>
+        <figure class="screen">
+          <img src="assets/landing/screen-chat3.jpg" alt="Еще один пример чата с ИИ-помощником" />
+          <figcaption class="screen-caption">Ответы под реальные сценарии учениц</figcaption>
+        </figure>
+        <figure class="screen">
+          <img src="assets/landing/screen-chat4.jpg" alt="Дополнительный пример ответа ИИ-помощника" />
+          <figcaption class="screen-caption">Мягкий тон без диет и стыда</figcaption>
+        </figure>
+        <figure class="screen">
+          <img src="assets/landing/screen-paywall.jpg" alt="Экран подписки eatuition Pro" />
+          <figcaption class="screen-caption">Монетизация через Pro</figcaption>
+        </figure>
+        <figure class="screen">
+          <img src="assets/landing/screen-paywall2.jpg" alt="Дополнительный экран подписки eatuition Pro" />
+          <figcaption class="screen-caption">Понятная витрина подписки</figcaption>
+        </figure>
+        <figure class="screen">
+          <img src="assets/landing/screen-pdf.jpg" alt="PDF-экспорт дневника" />
+          <figcaption class="screen-caption">PDF-дневник для специалиста</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="creator-value">
+      <div class="section-head">
+        <p class="kicker">Личная выгода для автора</p>
+        <h2>Это может работать на ваш имидж, продуктовую линейку и ценность ученицы</h2>
+        <p class="section-copy">
+          Предложение не про “купить приложение вслепую”. Логика проще:
+          безопасно проверить, станет ли приложение вашим премиальным слоем,
+          который повышает ценность курса и удерживает ученицу между уроками.
+        </p>
+      </div>
+
+      <div class="split">
+        <article class="card pros">
+          <h3>Что получаете вы</h3>
+          <ul>
+            <li>Повод выйти на рынок с продуктом, которого почти нет в этой нише.</li>
+            <li>Имидж автора, который не просто продаёт курс, а создаёт экосистему.</li>
+            <li>Новый премиальный тариф: курс + приложение + практика между уроками.</li>
+            <li>Больше касаний с ученицей без постоянного ручного сопровождения.</li>
+            <li>Данные о реальных запросах аудитории: стресс, ПМС, вечер, вина, скука.</li>
+          </ul>
+        </article>
+
+        <article class="card risks">
+          <h3>Что честно проверяем на пилоте</h3>
+          <ul>
+            <li>Пользуются ли ученицы приложением 7–14 дней, а не только открывают один раз.</li>
+            <li>Какие функции реально ценны: чат, дневник, упражнения, PDF, сводка.</li>
+            <li>Готова ли аудитория платить за приложение отдельно или в составе тарифа.</li>
+            <li>Какие доработки нужны перед версией под ваш бренд.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="economy">
+      <div class="section-head">
+        <p class="kicker">Экономика для вашей аудитории</p>
+        <h2>Считаем не “миллион подписчиков”, а тёплое ядро и учениц школы</h2>
+        <p class="section-copy">
+          Ниже примерная модель для одного партнёра: 1,1 млн Instagram, 29 тыс. Telegram
+          и уже существующая школа. Это не обещание дохода, а способ быстро понять,
+          где может быть денежная польза: подписка, доля автора и повышение чека курса.
+        </p>
+      </div>
+
+      <div class="scenario-grid">
+        <article class="scenario">
+          <strong>Осторожно</strong>
+          <span>290 платящих × 790 ₽ × 6 месяцев = ~1,37 млн ₽ оборота. Доля автора 40% + небольшая наценка курса: ~1,15 млн ₽ пользы.</span>
+        </article>
+        <article class="scenario">
+          <strong>Базово</strong>
+          <span>725 платящих × 790 ₽ × 8 месяцев = ~4,58 млн ₽ оборота. Доля автора 40% + тариф “с приложением”: ~3,58 млн ₽ пользы.</span>
+        </article>
+        <article class="scenario">
+          <strong>Сильный запуск</strong>
+          <span>1 450 платящих × 990 ₽ × 12 месяцев = ~17,2 млн ₽ оборота. Доля автора 40% + рост чека курса: ~10,5 млн ₽ пользы.</span>
+        </article>
+      </div>
+
+      <div class="card" style="margin-top: 18px;">
+        <h3>Где появляется денежная польза</h3>
+        <div class="calc-list">
+          <div class="calc-line">
+            <strong>Доля от подписки</strong>
+            <span>Если приложение продаётся аудитории как Pro-доступ, автор может получать долю с оборота без разработки продукта с нуля.</span>
+          </div>
+          <div class="calc-line">
+            <strong>Повышение чека курса</strong>
+            <span>Тариф “курс + приложение” можно продавать дороже, потому что ученица получает не только уроки, но и ежедневную практику.</span>
+          </div>
+          <div class="calc-line">
+            <strong>Рост ценности ученицы</strong>
+            <span>Чем больше ученица возвращается в практику, тем выше шанс завершить курс, остаться в экосистеме и купить следующий продукт.</span>
+          </div>
+          <div class="calc-line">
+            <strong>Экономия разработки</strong>
+            <span>Свой аналог с нуля потребует продуктовую команду, дизайн, backend, AI-логику, тестирование и месяцы работы до первой проверки.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="calculator" aria-label="Калькулятор экономики проекта">
+        <div class="calculator-panel">
+          <h3>Калькулятор партнёрской модели</h3>
+          <div class="range-field">
+            <label class="range-label" for="audienceRange">
+              Аудитория / охват для расчёта
+              <span id="audienceValue">1 100 000</span>
+            </label>
+            <input id="audienceRange" type="range" min="5000" max="1100000" step="5000" value="1100000" />
+          </div>
+          <div class="range-field">
+            <label class="range-label" for="conversionRange">
+              Конверсия в оплату
+              <span id="conversionValue">0.3%</span>
+            </label>
+            <input id="conversionRange" type="range" min="0.1" max="30" step="0.1" value="0.3" />
+          </div>
+          <div class="range-field">
+            <label class="range-label" for="priceRange">
+              Цена Pro в месяц
+              <span id="priceValue">790 ₽</span>
+            </label>
+            <input id="priceRange" type="range" min="390" max="1490" step="50" value="790" />
+          </div>
+          <div class="range-field">
+            <label class="range-label" for="monthsRange">
+              Средняя длительность оплаты
+              <span id="monthsValue">6 мес.</span>
+            </label>
+            <input id="monthsRange" type="range" min="1" max="12" step="1" value="6" />
+          </div>
+          <div class="range-field">
+            <label class="range-label" for="shareRange">
+              Доля автора / школы
+              <span id="shareValue">70%</span>
+            </label>
+            <input id="shareRange" type="range" min="0" max="100" step="5" value="70" />
+          </div>
+          <div class="range-field">
+            <label class="range-label" for="studentsRange">
+              Учениц в тарифе “с приложением”
+              <span id="studentsValue">700</span>
+            </label>
+            <input id="studentsRange" type="range" min="50" max="3000" step="50" value="700" />
+          </div>
+          <div class="range-field">
+            <label class="range-label" for="upliftRange">
+              Наценка к курсу за приложение
+              <span id="upliftValue">2 500 ₽</span>
+            </label>
+            <input id="upliftRange" type="range" min="500" max="7000" step="500" value="2500" />
+          </div>
+        </div>
+
+        <div class="calculator-panel calculator-result">
+          <div class="result-card">
+            <strong id="payingUsers">3 300</strong>
+            <span>примерно платящих пользователей</span>
+          </div>
+          <div class="result-card">
+            <strong id="grossRevenue">15,6 млн ₽</strong>
+            <span>потенциальный оборот подписки за период</span>
+          </div>
+          <div class="result-card">
+            <strong id="creatorRevenue">10,9 млн ₽</strong>
+            <span>примерная доля автора при выбранной модели</span>
+          </div>
+          <div class="result-card">
+            <strong id="courseRevenue">1.8 млн ₽</strong>
+            <span>дополнительный доход от тарифа курса “с приложением”</span>
+          </div>
+          <div class="result-card">
+            <strong id="totalRevenue">12,7 млн ₽</strong>
+            <span>суммарная денежная польза для автора/школы</span>
+          </div>
+          <p class="note">
+            Калькулятор не учитывает повторные покупки, удержание учениц и экономию
+            разработки. Это осторожная модель для первого разговора, которую можно
+            уточнить по вашим реальным цифрам.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="arguments">
+      <div class="section-head">
+        <p class="kicker">Почему это стоит обсудить сейчас</p>
+        <h2>Аргументы “за” и честные ответы на риски</h2>
+        <p class="section-copy">
+          Самый безопасный формат — не большая сделка сразу, а короткий пилот:
+          проверить реакцию учениц, цифры вовлечения и ощущение ценности для вашего бренда.
+        </p>
+      </div>
+
+      <div class="argument-list">
+        <div class="argument-line">
+          <strong>За: можно занять категорию первой.</strong>
+          <span>В нише интуитивного питания почти нет узнаваемого приложения под автора и школу. Это шанс выглядеть не как ещё один курс, а как методология с собственным tech-продуктом.</span>
+        </div>
+        <div class="argument-line">
+          <strong>Риск: ИИ может ответить неидеально.</strong>
+          <span>Решение: закрытый пилот, ограниченные сценарии, мягкий тон без диет и стыда, запрет на медицинские обещания и возможность направлять сложные случаи к специалисту.</span>
+        </div>
+        <div class="argument-line">
+          <strong>Риск: “У нас уже есть Telegram”.</strong>
+          <span>Telegram даёт контент и комьюнити, но не хранит личный дневник, паттерны, PDF-отчёт, историю запросов и ежедневную персональную поддержку.</span>
+        </div>
+        <div class="argument-line">
+          <strong>Риск: рано говорить о покупке или лицензии.</strong>
+          <span>Покупка не нужна на первом шаге. Достаточно пилота на 20–30 учениц, а дальше решение принимается по цифрам, отзывам и готовности аудитории платить.</span>
+        </div>
+        <div class="argument-line">
+          <strong>Риск: нужно всё под личный бренд.</strong>
+          <span>Так и должно быть на следующем этапе: цвета, тексты, уроки, onboarding, подборка упражнений и позиционирование могут быть адаптированы под вашу школу.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="roadmap">
+      <div class="section-head">
+        <p class="kicker">Как может развиваться приложение</p>
+        <h2>От закрытого пилота к приложению под ваш бренд</h2>
+        <p class="section-copy">
+          Не нужно строить “идеальное приложение” до проверки. Логичнее двигаться
+          этапами: сначала спрос, потом бренд, затем монетизация и аналитика.
+        </p>
+      </div>
+
+      <div class="roadmap-list">
+        <div class="roadmap-line">
+          <strong>Этап 1: закрытый пилот</strong>
+          <span>20–30 учениц, 14 дней, TestFlight / Android-сборка, инструкция, сбор отзывов и метрик.</span>
+        </div>
+        <div class="roadmap-line">
+          <strong>Этап 2: бренд школы</strong>
+          <span>Цвета, логотип, тексты автора, уроки курса, отдельный onboarding и подборка упражнений под методологию.</span>
+        </div>
+        <div class="roadmap-line">
+          <strong>Этап 3: монетизация</strong>
+          <span>Pro-подписка, тариф “курс + приложение”, лицензия для школы или доля с продаж внутри аудитории.</span>
+        </div>
+        <div class="roadmap-line">
+          <strong>Этап 4: аналитика и сопровождение</strong>
+          <span>Дашборд для куратора: активность, частые темы, риск выпадения, отчёты по группе без раскрытия лишних личных данных.</span>
+        </div>
+        <div class="roadmap-line">
+          <strong>Этап 5: расширение каналов</strong>
+          <span>Telegram-бот, веб-версия, корпоративные программы wellbeing, англоязычная версия и B2B-лицензии для специалистов.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="collaboration">
+      <div class="section-head">
+        <p class="kicker">Форматы</p>
+        <h2>Можно начать с малого, а не с большого риска</h2>
+      </div>
+
+      <div class="grid-3">
+        <article class="card">
+          <h3>Пилот</h3>
+          <p>20–30 учениц, 14 дней, демо-сборка, сбор обратной связи и метрик.</p>
+        </article>
+        <article class="card">
+          <h3>Лицензия + доля с продаж</h3>
+          <p>Блогер получает продукт для аудитории, владелец продукта сохраняет технологию.</p>
+        </article>
+        <article class="card">
+          <h3>White-label</h3>
+          <p>Приложение под бренд школы: цвета, логотип, пилотный flow, дальнейшая интеграция.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="pilot">
+      <div class="pilot">
+        <div class="pilot-highlight">
+          <strong>20–30 учениц</strong>
+          <span>
+            закрытый пилот на 14 дней: дневник, ИИ-чат, сводка дня, PDF-экспорт
+            и понятные метрики вовлечения.
+          </span>
+        </div>
+        <article class="card">
+          <h3>Что проверяем на пилоте</h3>
+          <ul>
+            <li>Сколько учениц возвращаются в приложение 7/14 дней.</li>
+            <li>Как часто записывают еду и ощущения.</li>
+            <li>Какие темы чаще всего приходят в чат: вечер, стресс, ПМС, вина.</li>
+            <li>Какие ответы ИИ ученицы отмечают как “помогло” и “применю”.</li>
+            <li>Готова ли аудитория воспринимать приложение как часть школы.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="cta">
+        <h2>Следующий шаг — показать демо и обсудить пилот</h2>
+        <p>
+          eatuition уже работает как демо-продукт. Для закрытого пилота нужна
+          тестовая сборка, короткая инструкция для участниц и согласование формата
+          обратной связи.
+        </p>
+        <a class="button" href="https://t.me/AngelinaHa">Обсудить пилот</a>
+      </div>
+    </section>
+
+    <footer>
+      eatuition · AI-компаньон по интуитивному питанию · demo materials for partner discussion
+    </footer>
+  </main>
+  <script>
+    const moneyFormatter = new Intl.NumberFormat("ru-RU", {
+      maximumFractionDigits: 1,
+    });
+
+    const integerFormatter = new Intl.NumberFormat("ru-RU", {
+      maximumFractionDigits: 0,
+    });
+
+    const formatMoney = (value) => {
+      if (value >= 1000000) {
+        return `${moneyFormatter.format(value / 1000000)} млн ₽`;
+      }
+
+      return `${integerFormatter.format(value)} ₽`;
+    };
+
+    const calculatorFields = {
+      audience: document.getElementById("audienceRange"),
+      conversion: document.getElementById("conversionRange"),
+      price: document.getElementById("priceRange"),
+      months: document.getElementById("monthsRange"),
+      share: document.getElementById("shareRange"),
+      students: document.getElementById("studentsRange"),
+      uplift: document.getElementById("upliftRange"),
+    };
+
+    const calculatorLabels = {
+      audience: document.getElementById("audienceValue"),
+      conversion: document.getElementById("conversionValue"),
+      price: document.getElementById("priceValue"),
+      months: document.getElementById("monthsValue"),
+      share: document.getElementById("shareValue"),
+      students: document.getElementById("studentsValue"),
+      uplift: document.getElementById("upliftValue"),
+      payingUsers: document.getElementById("payingUsers"),
+      grossRevenue: document.getElementById("grossRevenue"),
+      creatorRevenue: document.getElementById("creatorRevenue"),
+      courseRevenue: document.getElementById("courseRevenue"),
+      totalRevenue: document.getElementById("totalRevenue"),
+    };
+
+    const updateCalculator = () => {
+      const audience = Number(calculatorFields.audience.value);
+      const conversion = Number(calculatorFields.conversion.value);
+      const price = Number(calculatorFields.price.value);
+      const months = Number(calculatorFields.months.value);
+      const share = Number(calculatorFields.share.value);
+      const students = Number(calculatorFields.students.value);
+      const uplift = Number(calculatorFields.uplift.value);
+      const payingUsers = Math.round(audience * (conversion / 100));
+      const grossRevenue = payingUsers * price * months;
+      const creatorRevenue = grossRevenue * (share / 100);
+      const courseRevenue = students * uplift;
+      const totalRevenue = creatorRevenue + courseRevenue;
+
+      calculatorLabels.audience.textContent = integerFormatter.format(audience);
+      calculatorLabels.conversion.textContent = `${conversion.toFixed(1)}%`;
+      calculatorLabels.price.textContent = `${integerFormatter.format(price)} ₽`;
+      calculatorLabels.months.textContent = `${months} мес.`;
+      calculatorLabels.share.textContent = `${share}%`;
+      calculatorLabels.students.textContent = integerFormatter.format(students);
+      calculatorLabels.uplift.textContent = `${integerFormatter.format(uplift)} ₽`;
+      calculatorLabels.payingUsers.textContent = integerFormatter.format(payingUsers);
+      calculatorLabels.grossRevenue.textContent = formatMoney(grossRevenue);
+      calculatorLabels.creatorRevenue.textContent = formatMoney(creatorRevenue);
+      calculatorLabels.courseRevenue.textContent = formatMoney(courseRevenue);
+      calculatorLabels.totalRevenue.textContent = formatMoney(totalRevenue);
+    };
+
+    Object.values(calculatorFields).forEach((field) => {
+      field.addEventListener("input", updateCalculator);
+    });
+
+    updateCalculator();
+  </script>
+</body>
+</html>
