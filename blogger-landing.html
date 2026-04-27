@@ -160,15 +160,6 @@
       background: var(--surface-soft);
     }
 
-    .video-fallback {
-      min-height: 520px;
-      display: grid;
-      place-items: center;
-      padding: 34px;
-      text-align: center;
-      color: var(--muted);
-    }
-
     section {
       padding: 76px 0;
     }
@@ -325,6 +316,43 @@
       background: linear-gradient(180deg, rgba(217, 135, 50, 0.07), #ffffff);
     }
 
+    .benefit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .benefit-card {
+      padding: 26px;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(108, 61, 244, 0.14), transparent 12rem),
+        #ffffff;
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 50px rgba(73, 49, 168, 0.1);
+    }
+
+    .benefit-card strong {
+      display: block;
+      color: var(--primary-dark);
+      font-size: 34px;
+      line-height: 1;
+      letter-spacing: -0.055em;
+    }
+
+    .benefit-card h3 {
+      margin: 16px 0 8px;
+      font-size: 20px;
+      letter-spacing: -0.03em;
+    }
+
+    .benefit-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
     .metric-row {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -353,16 +381,14 @@
     }
 
     .calc-list,
-    .argument-list,
-    .roadmap-list {
+    .argument-list {
       display: grid;
       gap: 14px;
       margin-top: 18px;
     }
 
     .calc-line,
-    .argument-line,
-    .roadmap-line {
+    .argument-line {
       display: grid;
       grid-template-columns: 0.9fr 1.1fr;
       gap: 18px;
@@ -373,15 +399,13 @@
     }
 
     .calc-line strong,
-    .argument-line strong,
-    .roadmap-line strong {
+    .argument-line strong {
       color: var(--text);
       line-height: 1.4;
     }
 
     .calc-line span,
-    .argument-line span,
-    .roadmap-line span {
+    .argument-line span {
       color: var(--muted);
       line-height: 1.5;
     }
@@ -558,6 +582,7 @@
       }
 
       .grid-3,
+      .benefit-grid,
       .flow,
       .screens,
       .metric-row,
@@ -567,17 +592,12 @@
       }
 
       .calc-line,
-      .argument-line,
-      .roadmap-line {
+      .argument-line {
         grid-template-columns: 1fr;
       }
 
       .hero {
         padding-top: 24px;
-      }
-
-      .video-fallback {
-        min-height: 420px;
       }
     }
   </style>
@@ -606,7 +626,7 @@
 
       <div class="hero-card" id="demo">
         <div class="video-box">
-          <video controls poster="cover-main.jpg">
+          <video controls playsinline preload="metadata" poster="cover-main.jpg">
             <source src="demo-video.mp4" type="video/mp4" />
           </video>
         </div>
@@ -746,18 +766,33 @@
         </p>
       </div>
 
+      <div class="benefit-grid">
+        <article class="benefit-card">
+          <strong>+20–35%</strong>
+          <h3>к завершению практики</h3>
+          <p>Ориентир, который проверяем на пилоте: больше ежедневных касаний должно помогать ученице не выпадать между уроками.</p>
+        </article>
+        <article class="benefit-card">
+          <strong>×2–3</strong>
+          <h3>к ценности ученицы</h3>
+          <p>Приложение может стать причиной остаться в экосистеме: курс, Pro-доступ, повторные покупки и сопровождение.</p>
+        </article>
+        <article class="benefit-card">
+          <strong>0 часов</strong>
+          <h3>технической работы</h3>
+          <p>Пилот, сборка, поддержка и доработка продукта остаются на стороне разработчика, а не команды автора.</p>
+        </article>
+      </div>
+
       <div class="split">
         <article class="card pros">
-          <h3>Что получаете вы</h3>
+          <h3>Почему это усиливает личный бренд</h3>
           <ul>
             <li>Повод выйти на рынок с продуктом, которого почти нет в этой нише.</li>
             <li>Имидж автора, который не просто продаёт курс, а создаёт экосистему.</li>
             <li>Новый премиальный тариф: курс + приложение + практика между уроками.</li>
-            <li>Больше касаний с ученицей без постоянного ручного сопровождения.</li>
-            <li>Данные о реальных запросах аудитории: стресс, ПМС, вечер, вина, скука.</li>
           </ul>
         </article>
-
         <article class="card risks">
           <h3>Что честно проверяем на пилоте</h3>
           <ul>
@@ -783,16 +818,16 @@
 
       <div class="scenario-grid">
         <article class="scenario">
-          <strong>Осторожно</strong>
+          <strong>Очень осторожно</strong>
           <span>290 платящих × 790 ₽ × 6 месяцев = ~1,37 млн ₽ оборота. Доля автора 40% + небольшая наценка курса: ~1,15 млн ₽ пользы.</span>
         </article>
         <article class="scenario">
-          <strong>Базово</strong>
-          <span>725 платящих × 790 ₽ × 8 месяцев = ~4,58 млн ₽ оборота. Доля автора 40% + тариф “с приложением”: ~3,58 млн ₽ пользы.</span>
+          <strong>Стартовый расчёт</strong>
+          <span>1 100 платящих × 790 ₽ × 6 месяцев = ~5,21 млн ₽ оборота. Доля автора 70% + тариф “с приложением”: ~5,4 млн ₽ пользы.</span>
         </article>
         <article class="scenario">
           <strong>Сильный запуск</strong>
-          <span>1 450 платящих × 990 ₽ × 12 месяцев = ~17,2 млн ₽ оборота. Доля автора 40% + рост чека курса: ~10,5 млн ₽ пользы.</span>
+          <span>3 300 платящих × 790 ₽ × 6 месяцев = ~15,6 млн ₽ оборота. Доля автора 70% + рост чека курса: ~12,7 млн ₽ пользы.</span>
         </article>
       </div>
 
@@ -831,9 +866,9 @@
           <div class="range-field">
             <label class="range-label" for="conversionRange">
               Конверсия в оплату
-              <span id="conversionValue">0.3%</span>
+              <span id="conversionValue">0.1%</span>
             </label>
-            <input id="conversionRange" type="range" min="0.1" max="30" step="0.1" value="0.3" />
+            <input id="conversionRange" type="range" min="0.05" max="30" step="0.05" value="0.1" />
           </div>
           <div class="range-field">
             <label class="range-label" for="priceRange">
@@ -874,23 +909,23 @@
 
         <div class="calculator-panel calculator-result">
           <div class="result-card">
-            <strong id="payingUsers">3 300</strong>
+            <strong id="payingUsers">1 100</strong>
             <span>примерно платящих пользователей</span>
           </div>
           <div class="result-card">
-            <strong id="grossRevenue">15,6 млн ₽</strong>
+            <strong id="grossRevenue">5,2 млн ₽</strong>
             <span>потенциальный оборот подписки за период</span>
           </div>
           <div class="result-card">
-            <strong id="creatorRevenue">10,9 млн ₽</strong>
+            <strong id="creatorRevenue">3,7 млн ₽</strong>
             <span>примерная доля автора при выбранной модели</span>
           </div>
           <div class="result-card">
-            <strong id="courseRevenue">1.8 млн ₽</strong>
+            <strong id="courseRevenue">1,8 млн ₽</strong>
             <span>дополнительный доход от тарифа курса “с приложением”</span>
           </div>
           <div class="result-card">
-            <strong id="totalRevenue">12,7 млн ₽</strong>
+            <strong id="totalRevenue">5,4 млн ₽</strong>
             <span>суммарная денежная польза для автора/школы</span>
           </div>
           <p class="note">
@@ -932,40 +967,6 @@
         <div class="argument-line">
           <strong>Риск: нужно всё под личный бренд.</strong>
           <span>Так и должно быть на следующем этапе: цвета, тексты, уроки, onboarding, подборка упражнений и позиционирование могут быть адаптированы под вашу школу.</span>
-        </div>
-      </div>
-    </section>
-
-    <section id="roadmap">
-      <div class="section-head">
-        <p class="kicker">Как может развиваться приложение</p>
-        <h2>От закрытого пилота к приложению под ваш бренд</h2>
-        <p class="section-copy">
-          Не нужно строить “идеальное приложение” до проверки. Логичнее двигаться
-          этапами: сначала спрос, потом бренд, затем монетизация и аналитика.
-        </p>
-      </div>
-
-      <div class="roadmap-list">
-        <div class="roadmap-line">
-          <strong>Этап 1: закрытый пилот</strong>
-          <span>20–30 учениц, 14 дней, TestFlight / Android-сборка, инструкция, сбор отзывов и метрик.</span>
-        </div>
-        <div class="roadmap-line">
-          <strong>Этап 2: бренд школы</strong>
-          <span>Цвета, логотип, тексты автора, уроки курса, отдельный onboarding и подборка упражнений под методологию.</span>
-        </div>
-        <div class="roadmap-line">
-          <strong>Этап 3: монетизация</strong>
-          <span>Pro-подписка, тариф “курс + приложение”, лицензия для школы или доля с продаж внутри аудитории.</span>
-        </div>
-        <div class="roadmap-line">
-          <strong>Этап 4: аналитика и сопровождение</strong>
-          <span>Дашборд для куратора: активность, частые темы, риск выпадения, отчёты по группе без раскрытия лишних личных данных.</span>
-        </div>
-        <div class="roadmap-line">
-          <strong>Этап 5: расширение каналов</strong>
-          <span>Telegram-бот, веб-версия, корпоративные программы wellbeing, англоязычная версия и B2B-лицензии для специалистов.</span>
         </div>
       </div>
     </section>
@@ -1087,7 +1088,8 @@
       const totalRevenue = creatorRevenue + courseRevenue;
 
       calculatorLabels.audience.textContent = integerFormatter.format(audience);
-      calculatorLabels.conversion.textContent = `${conversion.toFixed(1)}%`;
+      const conversionPrecision = conversion < 1 ? 2 : 1;
+      calculatorLabels.conversion.textContent = `${conversion.toFixed(conversionPrecision).replace(/\.?0+$/, "")}%`;
       calculatorLabels.price.textContent = `${integerFormatter.format(price)} ₽`;
       calculatorLabels.months.textContent = `${months} мес.`;
       calculatorLabels.share.textContent = `${share}%`;
